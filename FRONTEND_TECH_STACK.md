@@ -1,778 +1,191 @@
-# Art Sabotage - Frontend Stack Completo
+# Art Sabotage - Frontend Tech Stack
 
 ## Versão 1.0
 **Data:** 7 de Fevereiro de 2026  
-**Status:** Guia Completo de Implementação
+**Status:** Especificação de Tecnologias
 
 ---
 
-## 1. Stack Tecnológico
+## 1. Visão Geral da Arquitetura
 
-### Core Technologies
-```json
-{
-  "react": "^18.2.0",
-  "react-dom": "^18.2.0",
-  "@types/react": "^18.2.0",
-  "@types/react-dom": "^18.2.0",
-  "typescript": "^5.0.0",
-  "vite": "^5.0.0"
-}
-```
+O frontend do Art Sabotage é projetado como uma **SPA (Single Page Application)** em React, otimizada para interações em tempo real e renderização eficiente de canvas.
 
-**Justificativas:**
-- **React 18+**: Ecossistema maduro, Concurrent Features para tempo real
-- **TypeScript**: Segurança tipada para lógica complexa de jogo
-- **Vite**: Build ultra-rápido, HMR instantâneo, otimização nativa
-
-### Estado e Comunicação
-```json
-{
-  "zustand": "^4.4.0",
-  "@tanstack/react-query": "^5.0.0",
-  "socket.io-client": "^4.7.0"
-}
-```
-
-**Justificativas:**
-- **Zustand**: Estado local minimalista, sem boilerplate
-- **React Query**: Cache automático, sincronização com servidor
-- **Socket.IO**: WebSocket confiável com fallbacks, reconexão automática
-
-### Canvas e Visualização
-```json
-{
-  "fabric": "^5.3.0",
-  "konva": "^9.2.0",
-  "react-konva": "^18.2.0"
-}
-```
-
-**Justificativas:**
-- **Fabric.js**: Canvas principal com API rica, undo/redo nativo
-- **Konva.js**: Performance superior para heatmaps e visualizações
-- **React-Konva**: Integração perfeita com React
-
-### UI e Animações
-```json
-{
-  "tailwindcss": "^3.3.0",
-  "framer-motion": "^10.16.0",
-  "@headlessui/react": "^1.7.0",
-  "react-hook-form": "^7.47.0"
-}
-```
-
-**Justificativas:**
-- **Tailwind CSS**: Desenvolvimento rápido com design system
-- **Framer Motion**: Animações fluidas para transições de fase
-- **Headless UI**: Componentes acessíveis sem estilos
-- **React Hook Form**: Formulários performáticos
+### Requisitos Técnicos Principais
+- Renderização em tempo real de strokes de múltiplos jogadores
+- Sincronização bidirecional com backend via WebSocket
+- Baixa latência para experiência de desenho fluida
+- Suporte a canvas complexo com undo/redo
+- Visualização de heatmaps e evidências
 
 ---
 
-## 2. Setup Inicial
+## 2. Stack Tecnológico
 
-### Comandos de Instalação
-```bash
-# Criar projeto com Vite
-npm create vite@latest art-sabotage -- --template react-ts
+### Core Framework
 
-# Entrar no diretório
-cd art-sabotage
+**React 18+**
+- **Justificativa:** Ecossistema maduro com Concurrent Features (Suspense, Transitions) essenciais para UI responsiva durante operações em tempo real. Virtual DOM otimizado para atualizações frequentes do canvas.
 
-# Instalar dependências
-npm install
+**TypeScript 5+**
+- **Justificativa:** Segurança de tipos para estados complexos de jogo (fases, jogadores, papéis). Autocomplete e refatoração segura essenciais para projeto colaborativo.
 
-# Instalar dependências do jogo
-npm install zustand @tanstack/react-query socket.io-client fabric konva react-konva tailwindcss framer-motion @headlessui/react react-hook-form
+**Vite**
+- **Justificativa:** Build tool moderna com HMR (Hot Module Replacement) instantâneo, startup rápido e otimização nativa de assets. Substituto superior ao CRA (Create React App).
 
-# Instalar dependências de desenvolvimento
-npm install -D @types/fabric vitest @testing-library/react @testing-library/jest-dom jsdom
+### Gerenciamento de Estado
+
+**Zustand**
+- **Justificativa:** Biblioteca de estado minimalista sem boilerplate. Alternativa ao Redux com API simples baseada em hooks. Ideal para estado global do jogo (sala, jogadores, fase atual).
+
+**TanStack Query (React Query)**
+- **Justificativa:** Cache automático de dados do servidor, sincronização em background, stale-while-revalidate. Elimina necessidade de gerenciar cache manualmente para dados de API.
+
+### Comunicação em Tempo Real
+
+**Socket.IO Client**
+- **Justificativa:** Cliente WebSocket robusto com fallbacks automáticos, reconexão automática e rooms. Par perfeito com o backend Socket.IO.
+
+### Canvas e Desenho
+
+**Fabric.js**
+- **Justificativa:** Biblioteca canvas madura com API orientada a objetos, sistema de layers, undo/redo nativo e serialização JSON. Ideal para canvas principal do jogo com múltiplos jogadores.
+
+**Konva.js + React-Konva**
+- **Justificativa:** Canvas com performance superior para visualizações complexas (heatmaps de evidências). Integração nativa com React via react-konva.
+
+### UI e Estilização
+
+**Tailwind CSS**
+- **Justificativa:** Framework CSS utility-first para desenvolvimento rápido. Design system consistente sem necessidade de escrever CSS customizado. Bundle otimizado automaticamente.
+
+**Framer Motion**
+- **Justificativa:** Biblioteca de animações declarativa para React. Animações fluidas para transições de fase do jogo, modal de votação, e feedback visual.
+
+**Headless UI**
+- **Justificativa:** Componentes acessíveis (modal, dropdown, tabs) sem estilos opinativos. Permite customização total com Tailwind CSS.
+
+**React Hook Form**
+- **Justificativa:** Formulários performáticos com validação eficiente e mínimas re-renderizações. Ideal para formulário de entrada na sala.
+
+### Testes
+
+**Vitest**
+- **Justificativa:** Test runner rápido com API compatível com Jest. Integração nativa com Vite.
+
+**React Testing Library**
+- **Justificativa:** Testes focados em comportamento do usuário, não implementação. Queries acessíveis e matchers customizados.
+
+**JSDOM**
+- **Justificativa:** Ambiente de teste DOM para Node.js. Permite testar componentes React sem browser real.
+
+---
+
+## 3. Justificativas Arquiteturais
+
+### Por que React e não Vue/Svelte?
+
+- **Ecossistema:** Maior disponibilidade de bibliotecas para canvas (Fabric, Konva)
+- **Time:** Familiaridade da equipe com React
+- **Concurrent Features:** Suspense e Transitions essenciais para UI não-bloqueante durante operações de canvas
+
+### Por que Zustand ao invés de Redux?
+
+- **Simplicidade:** API minimalista sem boilerplate
+- **TypeScript:** Tipagem nativa sem configuração complexa
+- **Tamanho:** Bundle menor (~1KB vs ~10KB)
+- **Necessidade:** Estado do jogo é relativamente simples (não precisa de middlewares complexos)
+
+### Por que duas bibliotecas de Canvas (Fabric + Konva)?
+
+- **Fabric.js:** Melhor para canvas principal de desenho (undo/redo, layers, serialização)
+- **Konva.js:** Performance superior para visualizações estáticas (heatmaps de evidências)
+- **Separação de Responsabilidades:** Cada biblioteca no seu domínio de melhor performance
+
+### Por que Tailwind CSS?
+
+- **Velocidade:** Desenvolvimento sem context switching entre JS e CSS
+- **Consistência:** Design system com spacing, colors, typography predefinidos
+- **Bundle:** PurgeCSS remove classes não utilizadas automaticamente
+- **Manutenção:** Sem necessidade de nomear classes ou gerenciar arquivos CSS
+
+---
+
+## 4. Variáveis de Ambiente
+
 ```
-
-### package.json Completo
-```json
-{
-  "name": "art-sabotage",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.0.2",
-    "zustand": "^4.4.0",
-    "@tanstack/react-query": "^5.0.0",
-    "socket.io-client": "^4.7.0",
-    "fabric": "^5.3.0",
-    "konva": "^9.2.0",
-    "react-konva": "^18.2.0",
-    "tailwindcss": "^3.3.0",
-    "framer-motion": "^10.16.0",
-    "@headlessui/react": "^1.7.0",
-    "react-hook-form": "^7.47.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "@types/fabric": "^5.3.0",
-    "@vitejs/plugin-react": "^4.0.0",
-    "vite": "^5.0.0",
-    "eslint": "^8.45.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.0",
-    "vitest": "^0.34.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "jsdom": "^22.1.0"
-  }
-}
-```
-
-### Arquivos de Configuração
-
-#### vite.config.ts
-```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 3000,
-    cors: true
-  },
-  build: {
-    target: 'esnext',
-    minify: 'terser'
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/test/setup.ts'
-  }
-})
-```
-
-#### tailwind.config.ts
-```typescript
-import type { Config } from 'tailwindcss'
-
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: '#6366f1',
-        secondary: '#8b5cf6',
-        accent: '#ec4899',
-        canvas: '#ffffff',
-        sabotage: '#ef4444'
-      },
-      animation: {
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-      }
-    },
-  },
-  plugins: [],
-}
-```
-
-#### tsconfig.json
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
-}
+VITE_WS_URL=ws://localhost:3001
+VITE_API_URL=http://localhost:3001
 ```
 
 ---
 
-## 3. Estrutura de Pastas
+## 5. Considerações de Deploy
 
-### Diagrama Visual
-```
-art-sabotage/
-├── public/
-│   ├── favicon.ico
-│   └── index.html
-├── src/
-│   ├── components/
-│   │   ├── game/
-│   │   │   ├── GameCanvas.tsx
-│   │   │   ├── PlayerList.tsx
-│   │   │   ├── VotingPanel.tsx
-│   │   │   ├── EvidenceViewer.tsx
-│   │   │   └── PhaseIndicator.tsx
-│   │   ├── ui/
-│   │   │   ├── Button.tsx
-│   │   │   ├── Modal.tsx
-│   │   │   ├── Input.tsx
-│   │   │   └── Loading.tsx
-│   │   └── layout/
-│   │       ├── Header.tsx
-│   │       ├── Sidebar.tsx
-│   │       └── MainLayout.tsx
-│   ├── hooks/
-│   │   ├── useCanvas.ts
-│   │   ├── useWebSocket.ts
-│   │   ├── useGameState.ts
-│   │   └── useVoting.ts
-│   ├── stores/
-│   │   ├── gameStore.ts
-│   │   ├── uiStore.ts
-│   │   └── canvasStore.ts
-│   ├── services/
-│   │   ├── socket.ts
-│   │   ├── api.ts
-│   │   └── canvas.ts
-│   ├── types/
-│   │   ├── game.ts
-│   │   ├── player.ts
-│   │   ├── canvas.ts
-│   │   └── vote.ts
-│   ├── utils/
-│   │   ├── constants.ts
-│   │   ├── helpers.ts
-│   │   └── validation.ts
-│   ├── styles/
-│   │   └── globals.css
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── vite-env.d.ts
-├── package.json
-├── vite.config.ts
-├── tailwind.config.ts
-└── tsconfig.json
-```
+### Plataforma Recomendada: Render.com (Static Site)
 
-### Descrição de Responsabilidades
+**Justificativa:**
+- Deploy simplificado de SPAs
+- CDN integrado para assets estáticos
+- Configuração CORS para WebSocket
+- SSL/HTTPS automático
 
-#### /src/components/
-- **game/**: Componentes específicos do jogo (canvas, votação, etc.)
-- **ui/**: Componentes reutilizáveis base (botões, modais)
-- **layout/**: Componentes estruturais (header, sidebar)
+### Requisitos de Build
 
-#### /src/hooks/
-- **useCanvas.ts**: Lógica de desenho e manipulação do canvas
-- **useWebSocket.ts**: Conexão e eventos do Socket.IO
-- **useGameState.ts**: Gerenciamento de fases e regras
-- **useVoting.ts**: Sistema de votação e resultados
-
-#### /src/stores/
-- **gameStore.ts**: Estado principal do jogo (jogadores, fase, etc.)
-- **uiStore.ts**: Estado da interface (modais, temas, etc.)
-- **canvasStore.ts**: Estado do canvas (strokes, ferramentas, etc.)
-
-#### /src/services/
-- **socket.ts**: Configuração e eventos do WebSocket
-- **api.ts**: Chamadas HTTP para backend
-- **canvas.ts**: Operações do canvas (desenho, limpeza, etc.)
-
-#### /src/types/
-- **game.ts**: Tipos relacionados ao jogo (fases, configurações)
-- **player.ts**: Tipos de jogador (papéis, pontuação)
-- **canvas.ts**: Tipos do canvas (strokes, ferramentas)
-- **vote.ts**: Tipos de votação (votos, resultados)
+- Node.js 18+ para build
+- Otimização de assets estáticos (imagens, fonts)
+- Code splitting para chunks menores
+- Source maps para debugging em produção
 
 ---
 
-## 4. Deploy Gratuito no Render
+## 6. Performance
 
-### Setup da Conta Render
+### Estratégias
 
-1. **Criar Conta**
-   - Acesse [render.com](https://render.com)
-   - Crie conta gratuita com GitHub
-   - Autorize acesso ao seu repositório
+1. **Canvas otimizado:** Rendering em requestAnimationFrame
+2. **Memoização:** React.memo para componentes de lista de jogadores
+3. **Virtualização:** Renderização virtual para listas longas (se necessário)
+4. **Code Splitting:** Lazy loading de componentes por fase do jogo
+5. **WebSocket eficiente:** Debounce de strokes, batching de eventos
 
-2. **Criar Web Service**
-   - Clique "New" → "Web Service"
-   - Conecte seu repositório GitHub
-   - Configure as seguintes opções:
+### Métricas Alvo
 
-### Configuração do Web Service
-
-#### Build Command
-```bash
-npm ci && npm run build
-```
-
-#### Start Command
-```bash
-npm run preview
-```
-
-#### Environment Variables
-```
-NODE_VERSION=18
-VITE_WS_URL=wss://seu-app.onrender.com
-VITE_API_URL=https://seu-app.onrender.com
-```
-
-### Configuração WebSocket
-
-#### Arquivo: src/services/socket.ts
-```typescript
-import { io, Socket } from 'socket.io-client';
-
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
-
-export const createSocket = (): Socket => {
-  return io(WS_URL, {
-    transports: ['websocket', 'polling'],
-    upgrade: true,
-    rememberUpgrade: true,
-    timeout: 5000,
-    forceNew: true
-  });
-};
-
-export const socket = createSocket();
-```
-
-#### Render.yaml (na raiz do projeto)
-```yaml
-services:
-  - type: web
-    name: art-sabotage
-    env: static
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: SAMEORIGIN
-      - path: /socket.io/*
-        name: Access-Control-Allow-Origin
-        value: '*'
-```
-
-### Deploy Automático
-
-1. **Conectar GitHub**
-   - Render vai monitorar seu repositório
-   - Deploy automático em cada push para main
-
-2. **Configurar Domínio**
-   - Seu app estará disponível em: `https://art-sabotage.onrender.com`
-   - Pode configurar domínio customizado nas configurações
-
-3. **Verificar Deploy**
-   - Acesse a URL e verifique se o app carrega
-   - Teste a conexão WebSocket no console do navegador
+- **First Contentful Paint:** < 1.5s
+- **Time to Interactive:** < 3s
+- **Canvas Latency:** < 50ms para sincronização de strokes
+- **Bundle Size:** < 200KB (gzip)
 
 ---
 
-## 5. Testes Essenciais
+## 7. Acessibilidade
 
-### Configuração Vitest
+### Medidas Implementadas
 
-#### src/test/setup.ts
-```typescript
-import '@testing-library/jest-dom';
-
-// Mock do Socket.IO
-vi.mock('socket.io-client', () => ({
-  io: vi.fn(() => ({
-    emit: vi.fn(),
-    on: vi.fn(),
-    off: vi.fn(),
-    disconnect: vi.fn(),
-  })),
-}));
-
-// Mock do Fabric.js
-vi.mock('fabric', () => ({
-  default: {
-    Canvas: vi.fn(() => ({
-      add: vi.fn(),
-      remove: vi.fn(),
-      clear: vi.fn(),
-      getObjects: vi.fn(() => []),
-      loadFromJSON: vi.fn(),
-      toJSON: vi.fn(() => ({})),
-    })),
-  },
-}));
-```
-
-#### vitest.config.ts
-```typescript
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/test/setup.ts',
-    coverage: {
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/test/',
-        '**/*.d.ts',
-      ],
-    },
-  },
-})
-```
-
-### Testes por Componente Crítico
-
-#### src/components/game/GameCanvas.test.tsx
-```typescript
-import { render, screen, fireEvent } from '@testing-library/react';
-import { GameCanvas } from './GameCanvas';
-import { useCanvas } from '../../hooks/useCanvas';
-
-// Mock do hook
-vi.mock('../../hooks/useCanvas');
-
-describe('GameCanvas', () => {
-  const mockUseCanvas = useCanvas as vi.MockedFunction<typeof useCanvas>;
-
-  beforeEach(() => {
-    mockUseCanvas.mockReturnValue({
-      canvas: null,
-      isDrawing: false,
-      currentTool: 'pencil',
-      currentColor: '#000000',
-      startDrawing: vi.fn(),
-      draw: vi.fn(),
-      stopDrawing: vi.fn(),
-      clearCanvas: vi.fn(),
-    });
-  });
-
-  it('deve renderizar o canvas', () => {
-    render(<GameCanvas />);
-    expect(screen.getByTestId('game-canvas')).toBeInTheDocument();
-  });
-
-  it('deve iniciar desenho ao clicar', () => {
-    const mockStartDrawing = vi.fn();
-    mockUseCanvas.mockReturnValue({
-      canvas: null,
-      isDrawing: false,
-      currentTool: 'pencil',
-      currentColor: '#000000',
-      startDrawing: mockStartDrawing,
-      draw: vi.fn(),
-      stopDrawing: vi.fn(),
-      clearCanvas: vi.fn(),
-    });
-
-    render(<GameCanvas />);
-    const canvas = screen.getByTestId('game-canvas');
-    
-    fireEvent.mouseDown(canvas, { clientX: 100, clientY: 100 });
-    expect(mockStartDrawing).toHaveBeenCalledWith(100, 100);
-  });
-
-  it('deve limpar canvas ao clicar no botão', () => {
-    const mockClearCanvas = vi.fn();
-    mockUseCanvas.mockReturnValue({
-      canvas: null,
-      isDrawing: false,
-      currentTool: 'pencil',
-      currentColor: '#000000',
-      startDrawing: vi.fn(),
-      draw: vi.fn(),
-      stopDrawing: vi.fn(),
-      clearCanvas: mockClearCanvas,
-    });
-
-    render(<GameCanvas />);
-    const clearButton = screen.getByTestId('clear-canvas');
-    
-    fireEvent.click(clearButton);
-    expect(mockClearCanvas).toHaveBeenCalled();
-  });
-});
-```
-
-#### src/services/socket.test.ts
-```typescript
-import { createSocket } from './socket';
-
-describe('Socket Service', () => {
-  it('deve criar conexão WebSocket', () => {
-    const socket = createSocket();
-    expect(socket).toBeDefined();
-    expect(socket.io).toBeDefined();
-  });
-
-  it('deve usar URL correta do ambiente', () => {
-    // Mock environment variables
-    vi.stubEnv('VITE_WS_URL', 'wss://test.example.com');
-    
-    const socket = createSocket();
-    expect(socket.io.uri).toBe('wss://test.example.com');
-    
-    vi.unstubAllEnvs();
-  });
-});
-```
-
-#### src/components/game/VotingPanel.test.tsx
-```typescript
-import { render, screen, fireEvent } from '@testing-library/react';
-import { VotingPanel } from './VotingPanel';
-import { useVoting } from '../../hooks/useVoting';
-
-vi.mock('../../hooks/useVoting');
-
-describe('VotingPanel', () => {
-  const mockUseVoting = useVoting as vi.MockedFunction<typeof useVoting>;
-
-  const mockPlayers = [
-    { id: '1', name: 'Player 1', isSaboteur: false },
-    { id: '2', name: 'Player 2', isSaboteur: true },
-    { id: '3', name: 'Player 3', isSaboteur: false },
-  ];
-
-  beforeEach(() => {
-    mockUseVoting.mockReturnValue({
-      players: mockPlayers,
-      selectedPlayer: null,
-      hasVoted: false,
-      selectPlayer: vi.fn(),
-      submitVote: vi.fn(),
-      timeRemaining: 30,
-    });
-  });
-
-  it('deve listar todos os jogadores', () => {
-    render(<VotingPanel />);
-    
-    mockPlayers.forEach(player => {
-      expect(screen.getByText(player.name)).toBeInTheDocument();
-    });
-  });
-
-  it('deve permitir selecionar um jogador', () => {
-    const mockSelectPlayer = vi.fn();
-    mockUseVoting.mockReturnValue({
-      players: mockPlayers,
-      selectedPlayer: null,
-      hasVoted: false,
-      selectPlayer: mockSelectPlayer,
-      submitVote: vi.fn(),
-      timeRemaining: 30,
-    });
-
-    render(<VotingPanel />);
-    const playerButton = screen.getByTestId('player-1');
-    
-    fireEvent.click(playerButton);
-    expect(mockSelectPlayer).toHaveBeenCalledWith('1');
-  });
-
-  it('deve submeter voto ao confirmar', () => {
-    const mockSubmitVote = vi.fn();
-    mockUseVoting.mockReturnValue({
-      players: mockPlayers,
-      selectedPlayer: { id: '1', name: 'Player 1', isSaboteur: false },
-      hasVoted: false,
-      selectPlayer: vi.fn(),
-      submitVote: mockSubmitVote,
-      timeRemaining: 30,
-    });
-
-    render(<VotingPanel />);
-    const submitButton = screen.getByTestId('submit-vote');
-    
-    fireEvent.click(submitButton);
-    expect(mockSubmitVote).toHaveBeenCalled();
-  });
-});
-```
-
-### Comandos de Teste
-
-```bash
-# Rodar todos os testes
-npm run test
-
-# Rodar testes com interface visual
-npm run test:ui
-
-# Gerar relatório de coverage
-npm run test:coverage
-
-# Rodar testes em modo watch
-npm run test -- --watch
-```
-
-### Coverage Mínimo
-
-**Componentes Críticos (80% coverage):**
-- GameCanvas
-- VotingPanel
-- WebSocket Service
-- GameState Manager
-
-**Componentes Secundários (60% coverage):**
-- PlayerList
-- EvidenceViewer
-- UI Components
+- **Headless UI:** Componentes com ARIA labels nativos
+- **Keyboard Navigation:** Suporte completo a navegação por teclado
+- **Screen Readers:** Anúncios de mudanças de fase do jogo
+- **Contraste:** Cores do Tailwind seguem WCAG 2.1
 
 ---
 
-## 6. Roadmap de Implementação
+## 8. Resumo das Tecnologias
 
-### Fase 1: Foundation
-**Objetivo:** Base funcional do projeto
-
-**Entregáveis:**
-- [ ] Projeto criado com Vite + React + TypeScript
-- [ ] Tailwind CSS configurado e funcionando
-- [ ] Estrutura de pastas implementada
-- [ ] Componentes base UI criados (Button, Modal, Input)
-- [ ] Sistema de routing básico
-
-**Critérios de Conclusão:**
-- Projeto roda localmente sem erros
-- Build de produção funciona
-- Componentes UI renderizam corretamente
-
-### Fase 2: Core Game
-**Objetivo:** Mecânicas principais do jogo
-
-**Entregáveis:**
-- [ ] Canvas com Fabric.js implementado
-- [ ] Sistema de WebSocket funcionando
-- [ ] Estado do jogo com Zustand
-- [ ] Componentes principais (GameCanvas, PlayerList)
-- [ ] Sistema de fases funcionando
-
-**Critérios de Conclusão:**
-- Canvas permite desenhar
-- WebSocket conecta e sincroniza
-- Fases do jogo transicionam corretamente
-
-### Fase 3: UI/UX
-**Objetivo:** Interface completa e polida
-
-**Entregáveis:**
-- [ ] Sistema de votação implementado
-- [ ] Visualização de evidências (heatmaps)
-- [ ] Animações com Framer Motion
-- [ ] Sistema de temas (light/dark)
-- [ ] Interface responsiva
-
-**Critérios de Conclusão:**
-- Votação funciona corretamente
-- Evidências são visualizadas
-- Interface é intuitiva e agradável
-
-### Fase 4: Testing & Deploy
-**Objetivo:** Qualidade e produção
-
-**Entregáveis:**
-- [ ] Testes para componentes críticos
-- [ ] Coverage mínimo atingido
-- [ ] Deploy no Render configurado
-- [ ] Performance otimizada
-- [ ] Documentação completa
-
-**Critérios de Conclusão:**
-- Testes passam consistentemente
-- Deploy funciona sem erros
-- Jogo está jogável online
+| Categoria | Tecnologia | Versão |
+|-----------|-----------|--------|
+| Framework | React | 18.2+ |
+| Linguagem | TypeScript | 5.0+ |
+| Build Tool | Vite | 5.0+ |
+| Estado Global | Zustand | 4.4+ |
+| Cache/Sync | TanStack Query | 5.0+ |
+| WebSocket | Socket.IO Client | 4.7+ |
+| Canvas Principal | Fabric.js | 5.3+ |
+| Canvas Visualização | Konva.js + React-Konva | 9.2+ / 18.2+ |
+| CSS | Tailwind CSS | 3.3+ |
+| Animações | Framer Motion | 10.16+ |
+| Componentes UI | Headless UI | 1.7+ |
+| Formulários | React Hook Form | 7.47+ |
+| Testes | Vitest + Testing Library | 0.34+ / 13.4+ |
 
 ---
 
-## 🚀 Comandos Rápidos
-
-### Desenvolvimento
-```bash
-# Iniciar desenvolvimento
-npm run dev
-
-# Rodar testes
-npm run test
-
-# Verificar lint
-npm run lint
-```
-
-### Produção
-```bash
-# Build para produção
-npm run build
-
-# Preview local do build
-npm run preview
-
-# Test coverage
-npm run test:coverage
-```
-
-### Deploy
-```bash
-# Commit para deploy automático
-git add .
-git commit -m "Ready for deploy"
-git push origin main
-```
-
----
-
-## 📝 Notas Finais
-
-### Performance
-- Canvas otimizado para 8 jogadores simultâneos
-- WebSocket com reconexão automática
-- Build otimizado para carregamento rápido
-
-### Escalabilidade
-- Arquitetura modular permite fácil expansão
-- Componentes reutilizáveis
-- Estado centralizado facilita manutenção
-
-### Segurança
-- Validação de inputs no frontend
-- Comunicação segura via WebSocket
-- Proteção contra XSS com React
-
----
-
-**Documento criado para servir como guia completo e definitivo para implementação do frontend do Art Sabotage. Todas as tecnologias, configurações e passos foram testados e validados para garantir uma experiência de desenvolvimento tranquila e um produto final funcional.**
+*Este documento foca exclusivamente nas decisões de tecnologia. Detalhes de implementação, estrutura de código e planejamento de desenvolvimento serão documentados separadamente.*
