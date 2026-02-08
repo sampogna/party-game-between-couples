@@ -29,27 +29,27 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 1.1 Setup Inicial Backend
 
-- [ ] **1.1.1** Criar estrutura de pastas do backend (src/, tests/)
-- [ ] **1.1.2** Inicializar projeto Node.js com package.json
-- [ ] **1.1.3** Instalar TypeScript e configurar tsconfig.json
-- [ ] **1.1.4** Configurar ESLint e Prettier
-- [ ] **1.1.5** Criar script de dev com ts-node
-- [ ] **1.1.6** Testar: `npm run dev` deve iniciar sem erros
+- [x] **1.1.1** Criar estrutura de pastas do backend (src/, tests/)
+- [x] **1.1.2** Inicializar projeto Node.js com package.json
+- [x] **1.1.3** Instalar TypeScript e configurar tsconfig.json
+- [x] **1.1.4** Configurar ESLint e Prettier
+- [x] **1.1.5** Criar script de dev com ts-node
+- [x] **1.1.6** Testar: `npm run dev` deve iniciar sem erros
 
 ### 1.2 Setup Inicial Frontend
 
-- [ ] **1.2.1** Criar projeto React com Vite (template react-ts)
-- [ ] **1.2.2** Configurar Tailwind CSS
-- [ ] **1.2.3** Configurar path aliases (@/*)
-- [ ] **1.2.4** Criar estrutura de pastas (components/, hooks/, stores/)
-- [ ] **1.2.5** Testar: `npm run dev` deve abrir página padrão do Vite
+- [x] **1.2.1** Criar projeto React com Vite (template react-ts)
+- [x] **1.2.2** Configurar Tailwind CSS
+- [x] **1.2.3** Configurar path aliases (@/*)
+- [x] **1.2.4** Criar estrutura de pastas (components/, hooks/, stores/)
+- [x] **1.2.5** Testar: `npm run dev` deve abrir página padrão do Vite
 
 ### 1.3 Configuração de Ambiente
 
-- [ ] **1.3.1** Criar .env.example no backend
-- [ ] **1.3.2** Criar .env.example no frontend
-- [ ] **1.3.3** Configurar variáveis de ambiente básicas (PORT, NODE_ENV)
-- [ ] **1.3.4** Testar: Ambientes devem carregar variáveis corretamente
+- [x] **1.3.1** Criar .env.example no backend
+- [x] **1.3.2** Criar .env.example no frontend
+- [x] **1.3.3** Configurar variáveis de ambiente básicas (PORT, NODE_ENV)
+- [x] **1.3.4** Testar: Ambientes devem carregar variáveis corretamente
 
 ---
 
@@ -57,27 +57,27 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 2.1 Servidor HTTP Básico
 
-- [ ] **2.1.1** Instalar Express e tipos
-- [ ] **2.1.2** Criar servidor Express básico
-- [ ] **2.1.3** Configurar middlewares (CORS, Helmet, JSON parser)
-- [ ] **2.1.4** Criar rota GET /health
-- [ ] **2.1.5** Testar: `curl http://localhost:3001/health` deve retornar status 200
+- [x] **2.1.1** Instalar Express e tipos
+- [x] **2.1.2** Criar servidor Express básico
+- [x] **2.1.3** Configurar middlewares (CORS, Helmet, JSON parser)
+- [x] **2.1.4** Criar rota GET /health
+- [x] **2.1.5** Testar: `curl http://localhost:3001/health` deve retornar status 200
 
 ### 2.2 WebSocket Básico
 
-- [ ] **2.2.1** Instalar Socket.IO
-- [ ] **2.2.2** Integrar Socket.IO com servidor Express
-- [ ] **2.2.3** Configurar CORS para WebSocket
-- [ ] **2.2.4** Criar handler de connection básico (log no console)
-- [ ] **2.2.5** Testar: Cliente Socket.IO deve conectar sem erros
+- [x] **2.2.1** Instalar Socket.IO
+- [x] **2.2.2** Integrar Socket.IO com servidor Express
+- [x] **2.2.3** Configurar CORS para WebSocket
+- [x] **2.2.4** Criar handler de connection básico (log no console)
+- [x] **2.2.5** Testar: Cliente Socket.IO deve conectar sem erros
 
 ### 2.3 Sistema de Salas (Rooms)
 
-- [ ] **2.3.1** Criar endpoint POST /rooms (criar sala)
-- [ ] **2.3.2** Implementar join room no Socket.IO
-- [ ] **2.3.3** Implementar leave room no Socket.IO
-- [ ] **2.3.4** Criar evento de broadcast para sala (teste: mensagem simples)
-- [ ] **2.3.5** Testar: Dois clientes na mesma sala devem receber mensagens
+- [x] **2.3.1** Criar endpoint POST /rooms (criar sala)
+- [x] **2.3.2** Implementar join room no Socket.IO
+- [x] **2.3.3** Implementar leave room no Socket.IO
+- [x] **2.3.4** Criar evento de broadcast para sala (teste: mensagem simples)
+- [x] **2.3.5** Testar: Dois clientes na mesma sala devem receber mensagens
 
 ---
 
@@ -85,28 +85,28 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 3.1 Integração WebSocket
 
-- [ ] **3.1.1** Instalar Socket.IO Client
-- [ ] **3.1.2** Criar hook useSocket (conexão básica)
-- [ ] **3.1.3** Implementar conexão ao servidor na inicialização
-- [ ] **3.1.4** Mostrar status de conexão na UI (conectado/desconectado)
-- [ ] **3.1.5** Testar: UI deve mostrar "Conectado" quando server estiver online
+- [x] **3.1.1** Instalar Socket.IO Client
+- [x] **3.1.2** Criar hook useSocket (conexão básica)
+- [x] **3.1.3** Implementar conexão ao servidor na inicialização
+- [x] **3.1.4** Mostrar status de conexão na UI (conectado/desconectado)
+- [x] **3.1.5** Testar: UI deve mostrar "Conectado" quando server estiver online
 
 ### 3.2 Sistema de Salas
 
-- [ ] **3.2.1** Criar tela de entrada (input para nome do jogador)
-- [ ] **3.2.2** Criar tela de criação/entrada em sala
-- [ ] **3.2.3** Implementar criação de sala (chamada ao backend)
-- [ ] **3.2.4** Implementar entrada em sala existente
-- [ ] **3.2.5** Mostrar lista de jogadores na sala
-- [ ] **3.2.6** Testar: Dois jogadores devem ver um ao outro na lista
+- [x] **3.2.1** Criar tela de entrada (input para nome do jogador)
+- [x] **3.2.2** Criar tela de criação/entrada em sala
+- [x] **3.2.3** Implementar criação de sala (chamada ao backend)
+- [x] **3.2.4** Implementar entrada em sala existente
+- [x] **3.2.5** Mostrar lista de jogadores na sala
+- [x] **3.2.6** Testar: Dois jogadores devem ver um ao outro na lista
 
 ### 3.3 Estados com Zustand
 
-- [ ] **3.3.1** Instalar Zustand
-- [ ] **3.3.2** Criar store de autenticação (playerName, playerId)
-- [ ] **3.3.3** Criar store de sala (roomId, players, isHost)
-- [ ] **3.3.4** Persistir estado no localStorage
-- [ ] **3.3.5** Testar: Recarregar página deve manter sessão
+- [x] **3.3.1** Instalar Zustand
+- [x] **3.3.2** Criar store de autenticação (playerName, playerId)
+- [x] **3.3.3** Criar store de sala (roomId, players, isHost)
+- [x] **3.3.4** Persistir estado no localStorage
+- [x] **3.3.5** Testar: Recarregar página deve manter sessão
 
 ---
 
@@ -114,28 +114,28 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 4.1 Tipos TypeScript
 
-- [ ] **4.1.1** Definir tipos básicos (Player, Room)
-- [ ] **4.1.2** Definir tipos de jogo (Game, GamePhase)
-- [ ] **4.1.3** Definir tipos de canvas (Stroke, Point)
-- [ ] **4.1.4** Criar enums para eventos Socket.IO
-- [ ] **4.1.5** Testar: Types devem compilar sem erros
+- [x] **4.1.1** Definir tipos básicos (Player, Room)
+- [x] **4.1.2** Definir tipos de jogo (Game, GamePhase)
+- [x] **4.1.3** Definir tipos de canvas (Stroke, Point)
+- [x] **4.1.4** Criar enums para eventos Socket.IO
+- [x] **4.1.5** Testar: Types devem compilar sem erros
 
 ### 4.2 Serviço de Jogadores
 
-- [ ] **4.2.1** Criar PlayerService (gerenciar jogadores em memória)
-- [ ] **4.2.2** Implementar createPlayer
-- [ ] **4.2.3** Implementar getPlayerById
-- [ ] **4.2.4** Implementar removePlayer
-- [ ] **4.2.5** Testar: CRUD básico de jogadores deve funcionar
+- [x] **4.2.1** Criar PlayerService (gerenciar jogadores em memória)
+- [x] **4.2.2** Implementar createPlayer
+- [x] **4.2.3** Implementar getPlayerById
+- [x] **4.2.4** Implementar removePlayer
+- [x] **4.2.5** Testar: CRUD básico de jogadores deve funcionar
 
 ### 4.3 Serviço de Salas
 
-- [ ] **4.3.1** Criar RoomService (gerenciar salas em memória)
-- [ ] **4.3.2** Implementar createRoom (gerar código único)
-- [ ] **4.3.3** Implementar addPlayerToRoom
-- [ ] **4.3.4** Implementar removePlayerFromRoom
-- [ ] **4.3.5** Implementar getRoomByCode
-- [ ] **4.3.6** Testar: Ciclo completo de sala deve funcionar
+- [x] **4.3.1** Criar RoomService (gerenciar salas em memória)
+- [x] **4.3.2** Implementar createRoom (gerar código único)
+- [x] **4.3.3** Implementar addPlayerToRoom
+- [x] **4.3.4** Implementar removePlayerFromRoom
+- [x] **4.3.5** Implementar getRoomByCode
+- [x] **4.3.6** Testar: Ciclo completo de sala deve funcionar
 
 ---
 
@@ -143,28 +143,28 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 5.1 Componentes Base
 
-- [ ] **5.1.1** Criar componente Button reutilizável
-- [ ] **5.1.2** Criar componente Input reutilizável
-- [ ] **5.1.3** Criar componente Modal reutilizável
-- [ ] **5.1.4** Criar componente Loading
-- [ ] **5.1.5** Testar: Componentes devem renderizar corretamente
+- [x] **5.1.1** Criar componente Button reutilizável
+- [x] **5.1.2** Criar componente Input reutilizável
+- [x] **5.1.3** Criar componente Modal reutilizável
+- [x] **5.1.4** Criar componente Loading
+- [x] **5.1.5** Testar: Componentes devem renderizar corretamente
 
 ### 5.2 Layout da Aplicação
 
-- [ ] **5.2.1** Criar componente Header
-- [ ] **5.2.2** Criar componente MainLayout
-- [ ] **5.2.3** Implementar roteamento básico (React Router)
-- [ ] **5.2.4** Criar página Home
-- [ ] **5.2.5** Criar página Lobby
-- [ ] **5.2.6** Testar: Navegação entre páginas deve funcionar
+- [x] **5.2.1** Criar componente Header
+- [x] **5.2.2** Criar componente MainLayout
+- [x] **5.2.3** Implementar roteamento básico (React Router)
+- [x] **5.2.4** Criar página Home
+- [x] **5.2.5** Criar página Lobby
+- [x] **5.2.6** Testar: Navegação entre páginas deve funcionar
 
 ### 5.3 Tela de Jogo
 
-- [ ] **5.3.1** Criar estrutura da página Game
-- [ ] **5.3.2** Criar componente PlayerList (sidebar)
-- [ ] **5.3.3** Criar componente PhaseIndicator
-- [ ] **5.3.4** Criar placeholder para GameCanvas
-- [ ] **5.3.5** Testar: Layout deve ser responsivo
+- [x] **5.3.1** Criar estrutura da página Game
+- [x] **5.3.2** Criar componente PlayerList (sidebar)
+- [x] **5.3.3** Criar componente PhaseIndicator
+- [x] **5.3.4** Criar placeholder para GameCanvas
+- [x] **5.3.5** Testar: Layout deve ser responsivo
 
 ---
 
@@ -172,29 +172,29 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 6.1 Integração Fabric.js
 
-- [ ] **6.1.1** Instalar Fabric.js
-- [ ] **6.1.2** Criar componente GameCanvas básico
-- [ ] **6.1.3** Inicializar canvas Fabric.js
-- [ ] **6.1.4** Configurar dimensões do canvas
-- [ ] **6.1.5** Testar: Canvas deve renderizar na tela
+- [x] **6.1.1** Instalar Fabric.js
+- [x] **6.1.2** Criar componente GameCanvas básico
+- [x] **6.1.3** Inicializar canvas Fabric.js
+- [x] **6.1.4** Configurar dimensões do canvas
+- [x] **6.1.5** Testar: Canvas deve renderizar na tela
 
 ### 6.2 Desenho Local
 
-- [ ] **6.2.1** Implementar evento mouseDown (iniciar stroke)
-- [ ] **6.2.2** Implementar evento mouseMove (continuar stroke)
-- [ ] **6.2.3** Implementar evento mouseUp (finalizar stroke)
-- [ ] **6.2.4** Implementar seleção de cor
-- [ ] **6.2.5** Implementar seleção de espessura
-- [ ] **6.2.6** Testar: Deve ser possível desenhar localmente
+- [x] **6.2.1** Implementar evento mouseDown (iniciar stroke)
+- [x] **6.2.2** Implementar evento mouseMove (continuar stroke)
+- [x] **6.2.3** Implementar evento mouseUp (finalizar stroke)
+- [x] **6.2.4** Implementar seleção de cor
+- [x] **6.2.5** Implementar seleção de espessura
+- [x] **6.2.6** Testar: Deve ser possível desenhar localmente
 
 ### 6.3 Sincronização de Strokes
 
-- [ ] **6.3.1** Emitir evento stroke:start para servidor
-- [ ] **6.3.2** Emitir evento stroke:continue para servidor
-- [ ] **6.3.3** Emitir evento stroke:end para servidor
-- [ ] **6.3.4** Receber strokes de outros jogadores
-- [ ] **6.3.5** Renderizar strokes remotos no canvas
-- [ ] **6.3.6** Testar: Dois jogadores devem ver desenhos um do outro em tempo real
+- [x] **6.3.1** Emitir evento stroke:start para servidor
+- [x] **6.3.2** Emitir evento stroke:continue para servidor
+- [x] **6.3.3** Emitir evento stroke:end para servidor
+- [x] **6.3.4** Receber strokes de outros jogadores
+- [x] **6.3.5** Renderizar strokes remotos no canvas
+- [x] **6.3.6** Testar: Dois jogadores devem ver desenhos um do outro em tempo real
 
 ---
 
@@ -202,11 +202,11 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 7.1 Serviço de Jogo
 
-- [ ] **7.1.1** Criar GameService
-- [ ] **7.1.2** Implementar createGame (vincular a sala)
-- [ ] **7.1.3** Implementar getGameById
-- [ ] **7.1.4** Implementar endGame
-- [ ] **7.1.5** Testar: Ciclo de vida básico de jogo
+- [x] **7.1.1** Criar GameService
+- [x] **7.1.2** Implementar createGame (vincular a sala)
+- [x] **7.1.3** Implementar getGameById
+- [x] **7.1.4** Implementar endGame
+- [x] **7.1.5** Testar: Ciclo de vida básico de jogo
 
 ### 7.2 Fases do Jogo
 
@@ -442,9 +442,9 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ## 📊 Progresso Geral
 
-**Fases Concluídas:** 0/17  
-**Tarefas Concluídas:** 0/131  
-**Progresso:** 0%
+**Fases Concluídas:** 6/17  
+**Tarefas Concluídas:** 99/131  
+**Progresso:** 76%
 
 ---
 
@@ -461,6 +461,7 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 - Manter código simples e legível
 - Documentar funções complexas
 - Commits frequentes com mensagens claras
+- **Arquivos/pastas que não devem ir para commits** (ex: `node_modules/`, `dist/`, `build/`, `.env`, arquivos de log) devem ser adicionados ao `.gitignore`
 
 ---
 
@@ -469,7 +470,22 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 | Data | Versão | Alterações |
 |------|--------|------------|
 | 2026-02-07 | 1.0 | Criação inicial do plano |
+| 2026-02-07 | 1.1 | Fase 1 concluída: Setup e Fundação do backend e frontend |
+| 2026-02-07 | 1.2 | Fase 2.1 concluída: Servidor HTTP Básico |
+| 2026-02-07 | 1.3 | Fase 2.2 concluída: WebSocket Básico |
+| 2026-02-07 | 1.4 | Fase 2.3 concluída: Sistema de Salas (Rooms) |
+| 2026-02-08 | 1.5 | Fase 3.1 concluída: Integração WebSocket no frontend |
+| 2026-02-08 | 1.6 | Fase 3.2 concluída: Sistema de Salas no frontend |
+| 2026-02-08 | 1.7 | Fase 3.3 concluída: Estados com Zustand |
+| 2026-02-08 | 1.8 | Fase 4.1 concluída: Tipos TypeScript do backend |
+| 2026-02-08 | 1.9 | Fase 4.2 concluída: Serviço de Jogadores |
+| 2026-02-08 | 2.0 | Fase 4.3 concluída: Serviço de Salas |
+| 2026-02-08 | 2.1 | Fase 5 concluída: Frontend - UI Básica |
+| 2026-02-08 | 2.2 | Fase 6.1 concluída: Integração Fabric.js |
+| 2026-02-08 | 2.3 | Fase 6.2 concluída: Desenho Local |
+| 2026-02-08 | 2.4 | Fase 6.3 concluída: Sincronização de Strokes |
+| 2026-02-08 | 2.5 | Fase 7.1 concluída: Serviço de Jogo |
 
 ---
 
-*Última atualização: 7 de Fevereiro de 2026*
+*Última atualização: 8 de Fevereiro de 2026*
