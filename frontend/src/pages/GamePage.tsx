@@ -1,18 +1,23 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useGameStore } from '../stores/gameStore';
-import { MainLayout, PlayerList, PhaseIndicator, GameCanvas } from '../components';
+import { MainLayout, PlayerList, PhaseIndicator, GameCanvas, PhaseManager } from '../components';
 import type { GameCanvasRef } from '../components/GameCanvas';
 import { useSocket } from '../contexts/SocketContext';
+import { useGameSocket } from '../hooks/useGameSocket';
+import { GamePhaseValues } from '../types';
 
 export function GamePage() {
-  const { room, playerId } = useGameStore();
+  const { room, playerId, gamePhase } = useGameStore();
   const { socket, isConnected } = useSocket();
   const canvasRef = useRef<GameCanvasRef>(null);
-  
+
+  // Inicializa o hook de socket do jogo
+  useGameSocket();
+
   // Armazena strokes remotos em progresso
-  const remoteStrokesRef = useRef<Map<string, { 
-    points: { x: number; y: number }[]; 
-    color: string; 
+  const remoteStrokesRef = useRef<Map<string, {
+    points: { x: number; y: number }[];
+    color: string;
     width: number;
   }>>(new Map());
 
@@ -147,6 +152,9 @@ export function GamePage() {
     return null;
   }
 
+  // Verifica se está na fase de desenho para mostrar o canvas
+  const isDrawingPhase = gamePhase === GamePhaseValues.DRAWING;
+
   return (
     <MainLayout>
       <div className="flex flex-col lg:flex-row gap-6">
@@ -159,21 +167,28 @@ export function GamePage() {
         <div className="flex-1">
           {/* Phase Indicator */}
           <div className="mb-4 flex justify-center">
-            <PhaseIndicator phase="LOBBY" />
+            <PhaseIndicator phase={gamePhase || 'LOBBY'} />
           </div>
 
-          {/* Game Canvas */}
-          <div className="flex justify-center">
-            <GameCanvas 
-              ref={canvasRef}
-              width={800} 
-              height={600}
-              onStrokeStart={handleStrokeStart}
-              onStrokeContinue={handleStrokeContinue}
-              onStrokeEnd={handleStrokeEnd}
-              onClearCanvas={handleClearCanvas}
-            />
+          {/* Phase Manager - mostra conteúdo específico da fase */}
+          <div className="mb-6">
+            <PhaseManager />
           </div>
+
+          {/* Game Canvas - apenas na fase de desenho */}
+          {isDrawingPhase && (
+            <div className="flex justify-center">
+              <GameCanvas
+                ref={canvasRef}
+                width={800}
+                height={600}
+                onStrokeStart={handleStrokeStart}
+                onStrokeContinue={handleStrokeContinue}
+                onStrokeEnd={handleStrokeEnd}
+                onClearCanvas={handleClearCanvas}
+              />
+            </div>
+          )}
         </div>
       </div>
     </MainLayout>

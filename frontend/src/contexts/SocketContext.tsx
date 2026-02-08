@@ -8,6 +8,7 @@ interface SocketContextType {
   error: string | null;
   joinRoom: (roomCode: string, playerName: string) => void;
   leaveRoom: (roomCode: string) => void;
+  startGame: (roomCode: string) => void;
 }
 
 const SocketContext = createContext<SocketContextType | null>(null);
@@ -79,6 +80,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const startGame = useCallback((roomCode: string) => {
+    if (socketRef.current) {
+      console.log('📤 Emitting game:start', { roomCode });
+      socketRef.current.emit('game:start', { roomCode });
+    }
+  }, []);
+
   return (
     <SocketContext.Provider
       value={{
@@ -87,6 +95,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         error,
         joinRoom,
         leaveRoom,
+        startGame,
       }}
     >
       {children}

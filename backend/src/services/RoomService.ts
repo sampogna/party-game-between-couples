@@ -39,20 +39,21 @@ class RoomService {
 
   /**
    * Cria uma nova sala
+   * @param code - Código opcional para a sala (útil para testes)
    */
-  createRoom(): Room {
-    // Gera código único
-    const code = this.generateUniqueRoomCode();
+  createRoom(code?: string): Room {
+    // Usa código fornecido ou gera um novo
+    const finalCode = code ? code.toUpperCase().trim() : this.generateUniqueRoomCode();
 
     // Cria a sala vazia (jogadores serão adicionados via Socket.IO)
     const room: Room = {
-      code,
+      code: finalCode,
       players: [],
       createdAt: new Date(),
     };
 
-    this.rooms.set(code, room);
-    console.log(`🏠 Sala criada: ${code}`);
+    this.rooms.set(finalCode, room);
+    console.log(`🏠 Sala criada: ${finalCode}`);
     return room;
   }
 

@@ -210,18 +210,18 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 7.2 Fases do Jogo
 
-- [ ] **7.2.1** Implementar enum GamePhase (LOBBY, DRAWING, VOTING, etc)
-- [ ] **7.2.2** Implementar mudança de fase
-- [ ] **7.2.3** Broadcast de mudança de fase para todos jogadores
-- [ ] **7.2.4** Implementar timer por fase (básico)
-- [ ] **7.2.5** Testar: Transições de fase devem funcionar
+- [x] **7.2.1** Implementar enum GamePhase (LOBBY, DRAWING, VOTING, etc)
+- [x] **7.2.2** Implementar mudança de fase
+- [x] **7.2.3** Broadcast de mudança de fase para todos jogadores
+- [x] **7.2.4** Implementar timer por fase (básico)
+- [x] **7.2.5** Testar: Transições de fase devem funcionar
 
 ### 7.3 Distribuição de Papéis
 
-- [ ] **7.3.1** Implementar lógica de atribuição de sabotadores
-- [ ] **7.3.2** Implementar atribuição de temas (honesto vs sabotador)
-- [ ] **7.3.3** Enviar papel secreto para cada jogador
-- [ ] **7.3.4** Testar: Jogadores devem receber papéis diferentes
+- [x] **7.3.1** Implementar lógica de atribuição de sabotadores
+- [x] **7.3.2** Implementar atribuição de temas (honesto vs sabotador)
+- [x] **7.3.3** Enviar papel secreto para cada jogador
+- [x] **7.3.4** Testar: Jogadores devem receber papéis diferentes
 
 ---
 
@@ -229,19 +229,19 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ### 8.1 Gerenciamento de Fases
 
-- [ ] **8.1.1** Criar store de jogo (gameStore)
-- [ ] **8.1.2** Implementar atualização de fase via WebSocket
-- [ ] **8.1.3** Criar componente PhaseManager
-- [ ] **8.1.4** Mostrar fase atual na UI
-- [ ] **8.1.5** Testar: UI deve refletir mudanças de fase
+- [x] **8.1.1** Criar store de jogo (gameStore)
+- [x] **8.1.2** Implementar atualização de fase via WebSocket
+- [x] **8.1.3** Criar componente PhaseManager
+- [x] **8.1.4** Mostrar fase atual na UI
+- [x] **8.1.5** Testar: UI deve refletir mudanças de fase
 
 ### 8.2 Tela de Preparação
 
-- [ ] **8.2.1** Criar componente PreparationPhase
-- [ ] **8.2.2** Mostrar papel do jogador (honesto/sabotador)
-- [ ] **8.2.3** Mostrar tema para desenhar
-- [ ] **8.2.4** Implementar countdown para início
-- [ ] **8.2.5** Testar: Informações devem ser mostradas corretamente
+- [x] **8.2.1** Criar componente PreparationPhase
+- [x] **8.2.2** Mostrar papel do jogador (honesto/sabotador)
+- [x] **8.2.3** Mostrar tema para desenhar
+- [x] **8.2.4** Implementar countdown para início
+- [x] **8.2.5** Testar: Informações devem ser mostradas corretamente
 
 ### 8.3 Tela de Desenho
 
@@ -442,9 +442,9 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 
 ## 📊 Progresso Geral
 
-**Fases Concluídas:** 6/17  
-**Tarefas Concluídas:** 99/131  
-**Progresso:** 76%
+**Fases Concluídas:** 7/17
+**Tarefas Concluídas:** 118/131
+**Progresso:** 90%
 
 ---
 
@@ -485,6 +485,9 @@ Este é um plano de implementação incremental. Cada item tem uma checkbox `[ ]
 | 2026-02-08 | 2.3 | Fase 6.2 concluída: Desenho Local |
 | 2026-02-08 | 2.4 | Fase 6.3 concluída: Sincronização de Strokes |
 | 2026-02-08 | 2.5 | Fase 7.1 concluída: Serviço de Jogo |
+| 2026-02-08 | 2.6 | Fase 7.2 e 7.3 concluídas: Fases do Jogo e Distribuição de Papéis |
+| 2026-02-08 | 2.7 | Fase 8.1 concluída: Gerenciamento de Fases no frontend |
+| 2026-02-08 | 2.8 | Fase 8.2 concluída: Tela de Preparação |
 
 ---
 

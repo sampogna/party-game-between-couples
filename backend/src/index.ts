@@ -6,7 +6,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { roomService } from './services/RoomService';
 import { gameService } from './services/GameService';
-import { CreateRoomRequest, JoinRoomRequest } from './types';
+import { CreateRoomRequest, JoinRoomRequest, GamePhase } from './types';
 
 dotenv.config();
 
@@ -241,7 +241,7 @@ io.on('connection', (socket) => {
   // Clear canvas event
   socket.on('canvas:clear', ({ roomCode }: { roomCode: string }) => {
     const normalizedCode = roomCode.toUpperCase().trim();
-    
+
     // Check if socket is in the room
     const rooms = Array.from(socket.rooms);
     if (!rooms.includes(normalizedCode)) {
@@ -253,6 +253,144 @@ io.on('connection', (socket) => {
       playerId: socket.id,
       timestamp: Date.now(),
     });
+  });
+
+  // Game events
+  socket.on('game:create', ({ roomCode, options }: { roomCode: string; options?: { maxRounds?: number; drawingTime?: number; votingTime?: number } }) => {
+    const normalizedCode = roomCode.toUpperCase().trim();
+
+    // Check if socket is in the room
+    const rooms = Array.from(socket.rooms);
+    if (!rooms.includes(normalizedCode)) {
+      socket.emit('game:error', { message: 'Você não está nesta sala' });
+      return;
+    }
+
+    // Check if player is host
+    const room = roomService.getRoomByCode(normalizedCode);
+    const player = room?.players.find(p => p.socketId === socket.id);
+    if (!player?.isHost) {
+      socket.emit('game:error', { message: 'Apenas o host pode criar o jogo' });
+      return;
+    }
+
+    // Create the game
+    const game = gameService.createGame(normalizedCode, options);
+    if (!game) {
+      socket.emit('game:error', { message: 'Erro ao criar o jogo. Verifique se há jogadores suficientes (mínimo 3).' });
+      return;
+    }
+
+    // Broadcast game created to all players in room
+    io.to(normalizedCode).emit('game:created', {
+      game: {
+        id: game.id,
+        phase: game.phase,
+        round: game.round,
+        maxRounds: game.maxRounds,
+        drawingTime: game.drawingTime,
+        votingTime: game.votingTime,
+      },
+    });
+
+    console.log(`🎮 Jogo criado na sala ${normalizedCode}`);
+  });
+
+  socket.on('game:start', ({ roomCode }: { roomCode: string }) => {
+    const normalizedCode = roomCode.toUpperCase().trim();
+
+    // Check if socket is in the room
+    const rooms = Array.from(socket.rooms);
+    if (!rooms.includes(normalizedCode)) {
+      socket.emit('game:error', { message: 'Você não está nesta sala' });
+      return;
+    }
+
+    // Check if player is host
+    const room = roomService.getRoomByCode(normalizedCode);
+    const player = room?.players.find(p => p.socketId === socket.id);
+    if (!player?.isHost) {
+      socket.emit('game:error', { message: 'Apenas o host pode iniciar o jogo' });
+      return;
+    }
+
+    // Check if game exists
+    if (!room?.game) {
+      socket.emit('game:error', { message: 'Nenhum jogo encontrado nesta sala' });
+      return;
+    }
+
+    // Start the game
+    const result = gameService.startGame(normalizedCode);
+    if (!result) {
+      socket.emit('game:error', { message: 'Erro ao iniciar o jogo' });
+      return;
+    }
+
+    const { game, roles, themes } = result;
+
+    // Broadcast game started to all players in room
+    io.to(normalizedCode).emit('game:started', {
+      game: {
+        id: game.id,
+        phase: game.phase,
+        round: game.round,
+        maxRounds: game.maxRounds,
+        drawingTime: game.drawingTime,
+        votingTime: game.votingTime,
+        themes: game.themes,
+      },
+      players: room.players.map(p => ({
+        id: p.id,
+        name: p.name,
+        isHost: p.isHost,
+        role: roles.get(p.id),
+        theme: themes.get(p.id),
+      })),
+    });
+
+    console.log(`🎮 Jogo iniciado na sala ${normalizedCode}`);
+
+    // Start drawing phase timer
+    setTimeout(() => {
+      const currentGame = gameService.getGameByRoomCode(normalizedCode);
+      if (currentGame && currentGame.phase === GamePhase.DRAWING) {
+        gameService.setPhase(normalizedCode, GamePhase.VOTING);
+        io.to(normalizedCode).emit('game:phaseChange', {
+          phase: GamePhase.VOTING,
+          round: currentGame.round,
+          votingTime: currentGame.votingTime,
+        });
+        console.log(`🗳️ Fase de votação iniciada na sala ${normalizedCode}`);
+
+        // Start voting phase timer
+        setTimeout(() => {
+          const gameAfterVoting = gameService.getGameByRoomCode(normalizedCode);
+          if (gameAfterVoting && gameAfterVoting.phase === GamePhase.VOTING) {
+            if (gameAfterVoting.round >= gameAfterVoting.maxRounds) {
+              gameService.endGame(normalizedCode);
+              io.to(normalizedCode).emit('game:ended', {
+                phase: GamePhase.GAME_OVER,
+                players: room.players,
+              });
+              console.log(`🏁 Jogo encerrado na sala ${normalizedCode}`);
+            } else {
+              gameService.advanceRound(normalizedCode);
+              const nextGame = gameService.getGameByRoomCode(normalizedCode);
+              if (nextGame) {
+                gameService.setPhase(normalizedCode, GamePhase.DRAWING);
+                io.to(normalizedCode).emit('game:phaseChange', {
+                  phase: GamePhase.DRAWING,
+                  round: nextGame.round,
+                  drawingTime: nextGame.drawingTime,
+                });
+                console.log(`🎨 Nova rodada iniciada na sala ${normalizedCode}`);
+              }
+            }
+          }
+        }, currentGame.votingTime * 1000);
+      }
+    }, game.drawingTime * 1000);
   });
 
   // Handle disconnect

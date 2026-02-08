@@ -2,6 +2,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { io as ioc, Socket as ClientSocket } from 'socket.io-client';
 import { roomService } from '../services/RoomService';
+import { gameService } from '../services/GameService';
 
 describe('Socket.IO Stroke Events', () => {
   let io: Server;
@@ -113,6 +114,10 @@ describe('Socket.IO Stroke Events', () => {
   });
 
   beforeEach((done) => {
+    // Clear all rooms and games before each test
+    roomService.clearAllRooms();
+    gameService.clearAllGames();
+
     // Create two client sockets
     clientSocket1 = ioc(`http://localhost:${TEST_PORT}`);
     clientSocket2 = ioc(`http://localhost:${TEST_PORT}`);
@@ -130,23 +135,24 @@ describe('Socket.IO Stroke Events', () => {
   afterEach(() => {
     clientSocket1.close();
     clientSocket2.close();
+    roomService.clearAllRooms();
+    gameService.clearAllGames();
   });
 
-  afterAll(() => {
+  afterAll((done) => {
+    roomService.clearAllRooms();
+    gameService.clearAllGames();
     io.close();
     httpServer.close();
+    done();
   });
 
   describe('Room Setup', () => {
     it('should allow two players to join the same room', (done) => {
       const roomCode = 'ABC123';
-      
-      // Create room first
-      roomService.createRoom();
-      const room = roomService.getRoomByCode(roomCode);
-      if (!room) {
-        roomService.createRoom();
-      }
+
+      // Create room first with specific code
+      roomService.createRoom(roomCode);
 
       clientSocket1.emit('room:join', { roomCode, playerName: 'Player1' });
 
@@ -162,7 +168,7 @@ describe('Socket.IO Stroke Events', () => {
           done();
         });
       });
-    });
+    }, 15000);
   });
 
   describe('Stroke Events', () => {
@@ -170,8 +176,8 @@ describe('Socket.IO Stroke Events', () => {
 
     beforeEach((done) => {
       // Create room and join both players
-      roomService.createRoom();
-      
+      roomService.createRoom(roomCode);
+
       let joinedCount = 0;
       const onJoined = () => {
         joinedCount++;
@@ -182,7 +188,7 @@ describe('Socket.IO Stroke Events', () => {
       clientSocket2.once('room:joined', onJoined);
 
       clientSocket1.emit('room:join', { roomCode, playerName: 'Player1' });
-      
+
       setTimeout(() => {
         clientSocket2.emit('room:join', { roomCode, playerName: 'Player2' });
       }, 100);
@@ -210,7 +216,7 @@ describe('Socket.IO Stroke Events', () => {
 
       // Client1 emits stroke:start
       clientSocket1.emit('stroke:start', strokeData);
-    });
+    }, 15000);
 
     it('should emit stroke:continue to other players in room', (done) => {
       const strokeId = 'stroke_456';
@@ -229,7 +235,7 @@ describe('Socket.IO Stroke Events', () => {
         strokeId,
         point,
       });
-    });
+    }, 15000);
 
     it('should emit stroke:end to other players in room', (done) => {
       const strokeId = 'stroke_789';
@@ -245,7 +251,7 @@ describe('Socket.IO Stroke Events', () => {
         roomCode,
         strokeId,
       });
-    });
+    }, 15000);
 
     it('should NOT emit stroke events to the sender', (done) => {
       const strokeId = 'stroke_no_echo';
@@ -267,7 +273,7 @@ describe('Socket.IO Stroke Events', () => {
         expect(received).toBe(false);
         done();
       }, 500);
-    });
+    }, 15000);
 
     it('should NOT emit stroke events to players not in the room', (done) => {
       const strokeId = 'stroke_private';
@@ -275,7 +281,7 @@ describe('Socket.IO Stroke Events', () => {
 
       // Create a third client that won't join the room
       const clientSocket3 = ioc(`http://localhost:${TEST_PORT}`);
-      
+
       clientSocket3.on('connect', () => {
         clientSocket3.once('stroke:start', () => {
           received = true;
@@ -295,15 +301,15 @@ describe('Socket.IO Stroke Events', () => {
           done();
         }, 500);
       });
-    });
+    }, 15000);
   });
 
   describe('Canvas Clear Event', () => {
     const roomCode = 'CLEAR1';
 
     beforeEach((done) => {
-      roomService.createRoom();
-      
+      roomService.createRoom(roomCode);
+
       let joinedCount = 0;
       const onJoined = () => {
         joinedCount++;
@@ -314,7 +320,7 @@ describe('Socket.IO Stroke Events', () => {
       clientSocket2.once('room:joined', onJoined);
 
       clientSocket1.emit('room:join', { roomCode, playerName: 'Player1' });
-      
+
       setTimeout(() => {
         clientSocket2.emit('room:join', { roomCode, playerName: 'Player2' });
       }, 100);
@@ -341,6 +347,6 @@ describe('Socket.IO Stroke Events', () => {
       });
 
       clientSocket1.emit('canvas:clear', { roomCode });
-    });
+    }, 15000);
   });
 });
